@@ -15,6 +15,7 @@ package co.edu.uniandes.csw.mueblesdelosalpes.persistencia.mock;
 
 import co.edu.uniandes.csw.mueblesdelosalpes.dto.ExperienciaVendedor;
 import co.edu.uniandes.csw.mueblesdelosalpes.dto.Mueble;
+import co.edu.uniandes.csw.mueblesdelosalpes.dto.Oferta;
 import co.edu.uniandes.csw.mueblesdelosalpes.dto.RegistroVenta;
 import co.edu.uniandes.csw.mueblesdelosalpes.dto.TipoMueble;
 import co.edu.uniandes.csw.mueblesdelosalpes.dto.TipoUsuario;
@@ -68,6 +69,10 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
     /**
      * Constructor de la clase. Inicializa los atributos.
      */
+    private static ArrayList<Oferta> ofertas;
+    
+    //Constructor de la clase 
+    
     public ServicioPersistenciaMock()
     {
         if (vendedores == null)
@@ -165,6 +170,9 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
         {
             registrosVentas.add((RegistroVenta) obj);
         }
+        else if(obj instanceof Oferta){
+            ofertas.add((Oferta) obj);
+        }
     }
 
     /**
@@ -216,6 +224,16 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
                 {
                     usuarios.set(i, editar);
                     break;
+                }
+            }
+        }
+        else if(obj instanceof Oferta){
+            Oferta newOferta = (Oferta) obj;
+            Oferta oferta;
+            for (int i = 0; i < ofertas.size(); i++) {
+                oferta = ofertas.get(i);
+                if (oferta.getIdOferta() == newOferta.getIdOferta()) {
+                    ofertas.set(i, newOferta);
                 }
             }
         }
@@ -283,6 +301,16 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
                     }
                 }
             }
+        }else if(obj instanceof Oferta){
+            Oferta ofertaDelete = (Oferta)obj;
+            Oferta ofertaActual;
+            for (int i = 0; i < ofertas.size(); i++) {
+                ofertaActual = ofertas.get(i);
+                if (ofertaDelete.getIdOferta() == ofertaActual.getIdOferta()) {
+                    ofertas.remove(i);
+                    break;
+                }
+            }
         }
     }
 
@@ -309,7 +337,9 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
         else if (c.equals(RegistroVenta.class))
         {
             return registrosVentas;
-        } 
+        }else if(c.equals(Oferta.class)){
+            return ofertas;
+        }
         else
         {
             return null;
@@ -356,6 +386,15 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
                 {
                     return mue;
                 }
+            }
+        }
+        else if(c.equals(Oferta.class)){
+            for (Object v: findAll(c)) {
+                Oferta oferta = (Oferta)v;
+                if (Long.valueOf(oferta.getIdOferta()).equals(id)) {
+                    return oferta;
+                } 
+                
             }
         }
         return null;
